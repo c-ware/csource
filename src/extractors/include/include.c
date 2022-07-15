@@ -139,8 +139,9 @@ static int is_inclusion(struct LibmatchCursor cursor) {
 
     /* If there is no > or " before the new line, then it is a heavily
      * malformed inclusion. Looks like '#include <foo/bar\n> */
-    if(libmatch_cond_before(&cursor, '>', "\n") == 0)
+    if((libmatch_cond_before(&cursor, '>', "\n") == 0) && (libmatch_cond_before(&cursor, '"', "\n") == 0))
         return 0;
+
 
     if(character == '<')
         libmatch_until(&cursor,  ">");
@@ -194,7 +195,7 @@ struct CSourceInclusions *csource_extract_inclusions(struct ExtractorSetup setup
 
             inclusion.type = INCLUSION_TYPE_SYSTEM;
 
-            path.contents = libmatch_read_alloc_until(&cursor, ">");
+            path.contents = libmatch_read_alloc_until(&cursor, "\"");
             path.capacity = strlen(path.contents) + 1;
             path.length = strlen(path.contents);
         }
