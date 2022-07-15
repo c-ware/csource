@@ -44,6 +44,7 @@
 /* Data structure properties */
 #define INCLUSION_TYPE  struct CSourceInclusion
 #define INCLUSION_HEAP  1
+#define INCLUSION_FREE(value) cstring_free((value).path)
 
 struct Cstring;
 struct ExtractorSetup;
