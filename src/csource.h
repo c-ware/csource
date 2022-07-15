@@ -41,6 +41,7 @@
 /* Project dependencies */
 #include "carray/carray.h"
 #include "libpath/libpath.h"
+#include "cstring/cstring.h"
 #include "liberror/liberror.h"
 #include "argparse/argparse.h"
 #include "libmatch/libmatch.h"
@@ -65,6 +66,7 @@
 /* Exit codes */
 #define EXIT_HELP_MESSAGE   1
 #define EXIT_UNKNOWN_FILE   2
+#define EXIT_INTERNAL_ERROR 3
 
 /*
  * @docgen: structure

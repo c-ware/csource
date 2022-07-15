@@ -1,5 +1,5 @@
-OBJS=src/main.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/iter.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/extractors/include/include.o 
-TESTOBJS=src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/iter.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/extractors/include/include.o 
+OBJS=src/main.o src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/iter.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/extractors/include/include.o 
+TESTOBJS=src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/iter.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/extractors/include/include.o 
 TESTS=
 CC=cc
 PREFIX=/usr/local
@@ -23,8 +23,11 @@ install:
 uninstall:
 	rm -f $(PREFIX)/bin/csource
 
-src/main.o: src/main.c src/csource.h
+src/main.o: src/main.c src/csource.h src/extractors/include/include.h
 	$(CC) -c $(CFLAGS) src/main.c -o src/main.o
+
+src/cstring/cstring.o: src/cstring/cstring.c src/cstring/cstring.h
+	$(CC) -c $(CFLAGS) src/cstring/cstring.c -o src/cstring/cstring.o
 
 src/libmatch/read.o: src/libmatch/read.c src/libmatch/libmatch.h
 	$(CC) -c $(CFLAGS) src/libmatch/read.c -o src/libmatch/read.o

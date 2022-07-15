@@ -40,8 +40,9 @@
  * local, and system inclusions in a source file.
 */
 
-#include "include.h"
 #include "../../csource.h"
+
+#include "include.h"
 
 /*
  * @docgen: function
@@ -161,7 +162,49 @@ struct CSourceInclusions *csource_extract_inclusions(struct ExtractorSetup setup
     struct LibmatchCursor cursor = libmatch_cursor_from_stream(source_file);
     struct CSourceInclusions *inclusions = carray_init(inclusions, INCLUSION);
 
-    is_inclusion(cursor);
+    while(cursor.cursor < cursor.length) {
+        struct CString path;
+        struct CSourceInclusion inclusion;
+
+        if(is_inclusion(cursor) == 0) {
+            libmatch_next_line(&cursor); 
+
+            continue;
+        }
+
+        INIT_VARIABLE(path);
+        INIT_VARIABLE(inclusion);
+
+        /* Get the inclusion path. Detecting a < or " before
+         * the end of the line can RELIABLY signal what type
+         * of inclusion it is because there is no circumstances
+         * where either of those characters should appear before
+         * one another. */
+        if(libmatch_cond_before(&cursor, '<', "\n") == 1) {
+            libmatch_until(&cursor, "<");
+
+            inclusion.type = INCLUSION_TYPE_SYSTEM;
+
+            path.contents = libmatch_read_alloc_until(&cursor, ">");
+            path.capacity = strlen(path.contents) + 1;
+            path.length = strlen(path.contents);
+
+        } else if(libmatch_cond_before(&cursor, '"', "\n") == 1) {
+            libmatch_until(&cursor, "\"");
+
+            inclusion.type = INCLUSION_TYPE_SYSTEM;
+
+            path.contents = libmatch_read_alloc_until(&cursor, ">");
+            path.capacity = strlen(path.contents) + 1;
+            path.length = strlen(path.contents);
+        }
+
+        inclusion.path = path;
+        inclusion.line = cursor.line + 1;
+
+        carray_append(inclusions, inclusion, INCLUSION);
+        libmatch_next_line(&cursor);
+    }
 
     fclose(source_file);
     libmatch_cursor_free(&cursor);

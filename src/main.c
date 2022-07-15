@@ -80,8 +80,21 @@ int main(int argc, char **argv) {
 
     /* Extract local and system inclusions */
     if(strcmp(setup.target, "include") == 0) {
-        csource_extract_inclusions(setup);                
+        int i = 0;
+        struct CSourceInclusions *inclusions = csource_extract_inclusions(setup);                
+
+        /* Display resources, and clean them up as we go. */
+        for(i = 0; i < carray_length(inclusions); i++) {
+            printf("%i\t\t%s\n", inclusions->contents[i].line, inclusions->contents[i].path.contents);
+
+            cstring_free(inclusions->contents[i].path);
+        }
+
+        free(inclusions->contents);
+        free(inclusions);
     }
+
+    argparse_free(parser);
 
     return 0;
 }

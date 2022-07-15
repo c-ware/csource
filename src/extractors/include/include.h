@@ -38,8 +38,6 @@
 #ifndef CWARE_CSOURCE_EXTRACT_INCLUDE_H
 #define CWARE_CSOURCE_EXTRACT_INCLUDE_H
 
-#define INCLUSION_PATH_LENGTH   128 + 1
-
 #define INCLUSION_TYPE_LOCAL    0
 #define INCLUSION_TYPE_SYSTEM   1
 
@@ -47,6 +45,7 @@
 #define INCLUSION_TYPE  struct CSourceInclusion
 #define INCLUSION_HEAP  1
 
+struct Cstring;
 struct ExtractorSetup;
 
 /*
@@ -66,7 +65,7 @@ struct ExtractorSetup;
 struct CSourceInclusion {
     int line;
     int type;
-    char path[INCLUSION_PATH_LENGTH + 1];
+    struct CString path;
 };
 
 /*
