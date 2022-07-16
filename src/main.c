@@ -80,14 +80,9 @@ int main(int argc, char **argv) {
 
     /* The source file must exist before we go any further. Do not
      * attempt to find a file named '-', since that means stdin. */
-    if(strcmp(setup.source, "-") != 0) {
-        if(libpath_exists(setup.source) == 0) {
-            fprintf(stderr, "csource: could not find file '%s'\n", setup.source);
-            exit(EXIT_UNKNOWN_FILE);
-        }
-
-        printf("%s\n", setup.source);
-        printf("%i\n", libpath_exists(setup.source));
+    if(strcmp(setup.source, "-") != 0 && libpath_exists(setup.source) == 0) {
+        fprintf(stderr, "csource: could not find file '%s'\n", setup.source);
+        exit(EXIT_UNKNOWN_FILE);
     }
 
     if(strcmp(setup.source, "-") == 0)

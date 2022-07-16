@@ -160,9 +160,8 @@ static void filter_multiline(struct LibmatchCursor *cursor) {
     liberror_is_null(filter_singleline, cursor);
     
     /* Keep traversing forward until a * / is found */
-    while(is_multiline_end(*cursor) == 0) {
+    while(is_multiline_end(*cursor) == 0)
         libmatch_cursor_getch(cursor);
-    }
 
     /* We only stop when we are ON the end delimiter--
      * we get rid of the end delimiter here. */
@@ -220,10 +219,54 @@ static void filter_singleline(struct LibmatchCursor *cursor) {
     }
 }
 
+/*
+ * @docgen: function
+ * @brief: move the cursor immediate after the end of a string
+ * @name: filter_string
+ *
+ * @description
+ * @This function will displace the cursor to the end of a string, which
+ * @prevents a / and * or // inside of a string from causing it to consider
+ * @that an actual comment. Since the strings themselves are not meant to be
+ * @ignored, the characters are still printed inside this function.
+ * @description
+ *
+ * @notes
+ * @This function should be called with the cursor on the opening quote of
+ * @string. When the function returns, we are left on the character after
+ * @the closing quote.
+ * @notes
+ *
+ * @param cursor: the cursor to displace
+ * @type: struct LibmatchCursor *
+*/
+static void filter_string(struct LibmatchCursor *cursor) {
+    int character = -1;
+    int escaped = 0;
+ 
+    printf("%c", '"');
+    libmatch_cursor_getch(cursor);
 
+    while((character = libmatch_cursor_getch(cursor)) != LIBMATCH_EOF) {
+        if(character == '\\') {
+            escaped = 1;
 
+            printf("%c", '\\');
 
+            continue;
+        }
 
+        if(character == '"' && escaped == 0) {
+            printf("%c", '"');
+
+            break;
+        }
+
+        printf("%c", character);
+
+        escaped = 0;
+    }
+}
 
 void csource_filter_comments(struct ModuleSetup setup) {
     struct LibmatchCursor cursor = libmatch_cursor_from_stream(setup.file);
@@ -246,12 +289,15 @@ void csource_filter_comments(struct ModuleSetup setup) {
             filter_singleline(&cursor);
 
             continue;
+        } else if(cursor.buffer[cursor.cursor] == '"') {
+            filter_string(&cursor);
+
+            continue;
         }
 
         printf("%c", cursor.buffer[cursor.cursor]);
         libmatch_cursor_getch(&cursor);
     }
-
 
     libmatch_cursor_free(&cursor);
 }
