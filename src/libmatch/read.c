@@ -213,7 +213,7 @@ char *libmatch_read_alloc_until(struct LibmatchCursor *cursor,
 
     while((character = libmatch_cursor_getch(cursor)) != EOF) {
         if(strchr(characters, character) != NULL) {
-            libmatch_cursor_ungetch(cursor);
+            _libmatch_pushback(cursor);
 
             break;
         }

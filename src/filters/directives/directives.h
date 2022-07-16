@@ -40,6 +40,9 @@
 
 struct ModuleSetup;
 
+#define PRINTABLES_WITHOUT_POUND      \
+    "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm[];',./{}:\"<>?1234567890!@$%^&*()-=_+`~\\|"
+
 void csource_filter_directives(struct ModuleSetup setup);
 
 #endif

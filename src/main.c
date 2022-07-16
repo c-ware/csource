@@ -52,7 +52,7 @@ struct ArgparseParser setup_arguments(int argc, char **argv) {
     struct ArgparseParser parser = argparse_init("csource", argc, argv);
 
     /* Setup arguments */
-    argparse_add_argument(&parser, "target");
+    argparse_add_argument(&parser, "command");
     argparse_add_argument(&parser, "source");
 
     /* Options */
@@ -75,14 +75,14 @@ int main(int argc, char **argv) {
 
     INIT_VARIABLE(setup);
 
-    setup.target = argparse_get_argument(parser, "target");
+    setup.command = argparse_get_argument(parser, "command");
     setup.source = argparse_get_argument(parser, "source");
     setup.file = NULL;
 
     /* The source file must exist before we go any further. Do not
      * attempt to find a file named '-', since that means stdin. */
     if(strcmp(setup.source, "-") != 0 && libpath_exists(setup.source) == 0) {
-        fprintf(stderr, "csource: could not find file '%s'\n", setup.source);
+        fprintf(ERROR_MESSAGE_STREAM, "csource: could not find file '%s'\n", setup.source);
         exit(EXIT_UNKNOWN_FILE);
     }
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
         setup.file = fopen(setup.source, "r");
 
     /* Extract local and system inclusions */
-    if(strcmp(setup.target, "include") == 0) {
+    if(strcmp(setup.command, "include") == 0) {
         int i = 0;
         struct CSourceInclusions *inclusions = csource_extract_inclusions(setup);                
 
@@ -101,17 +101,19 @@ int main(int argc, char **argv) {
             printf("%i\t\t%s\n", inclusions->contents[i].line, inclusions->contents[i].path.contents);
 
         carray_free(inclusions, INCLUSION);
-    }
-
-    if(strcmp(setup.target, "functions") == 0) {
+    } else if(strcmp(setup.command, "functions") == 0) {
         csource_extract_functions(setup);
-    }
-
-    if(strcmp(setup.target, "strip-comments") == 0) {
+    } else if(strcmp(setup.command, "strip-comments") == 0) {
         csource_filter_comments(setup);
+    } else if(strcmp(setup.command, "strip-directives") == 0) {
+        csource_filter_directives(setup);
+    } else {
+        fprintf(ERROR_MESSAGE_STREAM, "csource: unknown module '%s\n", setup.command);
+        exit(EXIT_UNKNOWN_MODULE);
     }
 
     argparse_free(parser);
+    fclose(setup.file);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

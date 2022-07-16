@@ -1,5 +1,5 @@
-OBJS=src/main.o src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/filters/comments/comments.o src/extractors/include/include.o src/extractors/functions/functions.o 
-TESTOBJS=src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/filters/comments/comments.o src/extractors/include/include.o src/extractors/functions/functions.o 
+OBJS=src/main.o src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/filters/directives/directives.o src/filters/comments/comments.o src/extractors/include/include.o src/extractors/functions/functions.o 
+TESTOBJS=src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/filters/directives/directives.o src/filters/comments/comments.o src/extractors/include/include.o src/extractors/functions/functions.o 
 TESTS=
 CC=cc
 PREFIX=/usr/local
@@ -61,6 +61,9 @@ src/argparse/extract.o: src/argparse/extract.c src/argparse/argparse.h src/argpa
 
 src/argparse/argparse.o: src/argparse/argparse.c src/argparse/argparse.h src/argparse/ap_inter.h
 	$(CC) -c $(CFLAGS) src/argparse/argparse.c -o src/argparse/argparse.o
+
+src/filters/directives/directives.o: src/filters/directives/directives.c src/csource.h src/filters/directives/directives.h
+	$(CC) -c $(CFLAGS) src/filters/directives/directives.c -o src/filters/directives/directives.o
 
 src/filters/comments/comments.o: src/filters/comments/comments.c src/csource.h src/filters/comments/comments.h
 	$(CC) -c $(CFLAGS) src/filters/comments/comments.c -o src/filters/comments/comments.o

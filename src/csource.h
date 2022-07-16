@@ -51,14 +51,15 @@
     memset(&(v), 0, sizeof((v)))
 
 /* Program configuration */
-#define HELP_MESSAGE_STREAM stderr
+#define HELP_MESSAGE_STREAM     stderr
+#define ERROR_MESSAGE_STREAM    stderr
 #define HELP_MESSAGE                                        \
     "csource SOURCE TARGET [ --help | -h ]\n"               \
     "Extract code from a C source file\n"                   \
     "\n"                                                    \
     "Arguments\n"                                           \
+    "    command            the type of token to extract\n" \
     "    source             the file to use\n"              \
-    "    target             the type of token to extract\n" \
     "\n"                                                    \
     "Options\n"                                             \
     "    --help, -h         display this message\n"
@@ -67,6 +68,7 @@
 #define EXIT_HELP_MESSAGE   1
 #define EXIT_UNKNOWN_FILE   2
 #define EXIT_INTERNAL_ERROR 3
+#define EXIT_UNKNOWN_MODULE 4
 
 /*
  * @docgen: structure
@@ -79,13 +81,13 @@
  * @field source: the source file
  * @type: const char *
  *
- * @field target: the type of token to get
+ * @field command: the command to perform
  * @type: const char *
 */
 struct ModuleSetup {
     FILE *file;
     const char *source;
-    const char *target;
+    const char *command;
 };
 
 #endif
