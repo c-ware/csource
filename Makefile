@@ -23,7 +23,7 @@ install:
 uninstall:
 	rm -f $(PREFIX)/bin/csource
 
-src/main.o: src/main.c src/csource.h src/extractors/include/include.h src/extractors/functions/functions.h src/filters/comments/comments.h
+src/main.o: src/main.c src/csource.h src/extractors/include/include.h src/extractors/functions/functions.h src/filters/comments/comments.h src/filters/directives/directives.h
 	$(CC) -c $(CFLAGS) src/main.c -o src/main.o
 
 src/cstring/cstring.o: src/cstring/cstring.c src/cstring/cstring.h

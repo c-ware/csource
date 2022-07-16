@@ -45,14 +45,15 @@
 #include "extractors/functions/functions.h"
 
 #include "filters/comments/comments.h"
+#include "filters/directives/directives.h"
 
 
 struct ArgparseParser setup_arguments(int argc, char **argv) {
     struct ArgparseParser parser = argparse_init("csource", argc, argv);
 
     /* Setup arguments */
-    argparse_add_argument(&parser, "source");
     argparse_add_argument(&parser, "target");
+    argparse_add_argument(&parser, "source");
 
     /* Options */
     argparse_add_option(&parser, "--help", "-h", 0);
@@ -74,8 +75,8 @@ int main(int argc, char **argv) {
 
     INIT_VARIABLE(setup);
 
-    setup.source = argparse_get_argument(parser, "source");
     setup.target = argparse_get_argument(parser, "target");
+    setup.source = argparse_get_argument(parser, "source");
     setup.file = NULL;
 
     /* The source file must exist before we go any further. Do not

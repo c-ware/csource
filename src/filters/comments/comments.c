@@ -268,6 +268,56 @@ static void filter_string(struct LibmatchCursor *cursor) {
     }
 }
 
+/*
+ * @docgen: function
+ * @brief: move the cursor immediate after the end of a character string
+ * @name: filter_character_string
+ *
+ * @description
+ * @This function will displace the cursor to the end of a character string,
+ * @which prevents a / and * or // inside of a character string from causing it
+ * to consider that an actual comment, or from considering quotes like '"' to be
+ * @dedicated string literals. Since the strings themselves are not meant to be
+ * @ignored, the characters are still printed inside this function.
+ * @description
+ *
+ * @notes
+ * @This function should be called with the cursor on the opening quote of
+ * @string. When the function returns, we are left on the character after
+ * @the closing quote.
+ * @notes
+ *
+ * @param cursor: the cursor to displace
+ * @type: struct LibmatchCursor *
+*/
+static void filter_character_string(struct LibmatchCursor *cursor) {
+    int character = -1;
+    int escaped = 0;
+ 
+    printf("%c", '\'');
+    libmatch_cursor_getch(cursor);
+
+    while((character = libmatch_cursor_getch(cursor)) != LIBMATCH_EOF) {
+        if(character == '\\') {
+            escaped = 1;
+
+            printf("%c", '\\');
+
+            continue;
+        }
+
+        if(character == '\'' && escaped == 0) {
+            printf("%c", '\'');
+
+            break;
+        }
+
+        printf("%c", character);
+
+        escaped = 0;
+    }
+}
+
 void csource_filter_comments(struct ModuleSetup setup) {
     struct LibmatchCursor cursor = libmatch_cursor_from_stream(setup.file);
 
@@ -291,6 +341,10 @@ void csource_filter_comments(struct ModuleSetup setup) {
             continue;
         } else if(cursor.buffer[cursor.cursor] == '"') {
             filter_string(&cursor);
+
+            continue;
+        } else if(cursor.buffer[cursor.cursor] == '\'') {
+            filter_character_string(&cursor);
 
             continue;
         }
