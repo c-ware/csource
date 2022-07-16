@@ -1,5 +1,5 @@
-OBJS=src/main.o src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/iter.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/extractors/include/include.o 
-TESTOBJS=src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/iter.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/extractors/include/include.o 
+OBJS=src/main.o src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/iter.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/extractors/include/include.o src/extractors/functions/functions.o 
+TESTOBJS=src/cstring/cstring.o src/libmatch/read.o src/libmatch/cond.o src/libmatch/cursor.o src/libmatch/match.o src/libpath/iter.o src/libpath/libpath.o src/libpath/compile/error.o src/libpath/compile/path.o src/libpath/compile/backends/unix.o src/argparse/ap_inter.o src/argparse/extract.o src/argparse/argparse.o src/extractors/include/include.o src/extractors/functions/functions.o 
 TESTS=
 CC=cc
 PREFIX=/usr/local
@@ -23,7 +23,7 @@ install:
 uninstall:
 	rm -f $(PREFIX)/bin/csource
 
-src/main.o: src/main.c src/csource.h src/extractors/include/include.h
+src/main.o: src/main.c src/csource.h src/extractors/include/include.h src/extractors/functions/functions.h
 	$(CC) -c $(CFLAGS) src/main.c -o src/main.o
 
 src/cstring/cstring.o: src/cstring/cstring.c src/cstring/cstring.h
@@ -65,8 +65,11 @@ src/argparse/extract.o: src/argparse/extract.c src/argparse/argparse.h src/argpa
 src/argparse/argparse.o: src/argparse/argparse.c src/argparse/argparse.h src/argparse/ap_inter.h
 	$(CC) -c $(CFLAGS) src/argparse/argparse.c -o src/argparse/argparse.o
 
-src/extractors/include/include.o: src/extractors/include/include.c src/extractors/include/include.h src/csource.h
+src/extractors/include/include.o: src/extractors/include/include.c src/csource.h src/extractors/include/include.h
 	$(CC) -c $(CFLAGS) src/extractors/include/include.c -o src/extractors/include/include.o
+
+src/extractors/functions/functions.o: src/extractors/functions/functions.c src/csource.h src/extractors/functions/functions.h
+	$(CC) -c $(CFLAGS) src/extractors/functions/functions.c -o src/extractors/functions/functions.o
 
 csource: $(OBJS)
 	$(CC) $(OBJS) -o csource $(LDFLAGS) $(LDLIBS)

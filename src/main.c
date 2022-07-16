@@ -35,12 +35,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+static int x = (1 + (2 + 3));
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 #include "csource.h"
 #include "extractors/include/include.h"
+#include "extractors/functions/functions.h"
 
 struct ArgparseParser setup_arguments(int argc, char **argv) {
     struct ArgparseParser parser = argparse_init("csource", argc, argv);
@@ -71,12 +74,20 @@ int main(int argc, char **argv) {
 
     setup.source = argparse_get_argument(parser, "source");
     setup.target = argparse_get_argument(parser, "target");
+    setup.file = NULL;
 
-    /* The source file must exist before we go any further. */
-    if(libpath_exists(setup.source) == 0) {
+
+    /* The source file must exist before we go any further. Do not
+     * attempt to find a file named '-', since that means stdin. */
+    if(strcmp(setup.source, "-") != 0 && libpath_exists(setup.source) == 0) {
         fprintf(stderr, "csource: could not find file '%s'\n", setup.source);
         exit(EXIT_UNKNOWN_FILE);
     }
+
+    if(strcmp(setup.source, "-") == 0)
+        setup.file = stdin;
+    else
+        setup.file = fopen(setup.source, "r");
 
     /* Extract local and system inclusions */
     if(strcmp(setup.target, "include") == 0) {
@@ -88,6 +99,10 @@ int main(int argc, char **argv) {
             printf("%i\t\t%s\n", inclusions->contents[i].line, inclusions->contents[i].path.contents);
 
         carray_free(inclusions, INCLUSION);
+    }
+
+    if(strcmp(setup.target, "functions") == 0) {
+        csource_extract_functions(setup);
     }
 
     argparse_free(parser);

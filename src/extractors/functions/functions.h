@@ -35,57 +35,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef CWARE_CSOURCE_H
-#define CWARE_CSOURCE_H
+#ifndef CWARE_CSOURCE_EXTRACT_FUNCTIONS_H
+#define CWARE_CSOURCE_EXTRACT_FUNCTIONS_H
 
-/* Project dependencies */
-#include "carray/carray.h"
-#include "libpath/libpath.h"
-#include "cstring/cstring.h"
-#include "liberror/liberror.h"
-#include "argparse/argparse.h"
-#include "libmatch/libmatch.h"
+struct ExtractorSetup;
 
-/* Helpful macros */
-#define INIT_VARIABLE(v) \
-    memset(&(v), 0, sizeof((v)))
-
-/* Program configuration */
-#define HELP_MESSAGE_STREAM stderr
-#define HELP_MESSAGE                                        \
-    "csource SOURCE TARGET [ --help | -h ]\n"               \
-    "Extract code from a C source file\n"                   \
-    "\n"                                                    \
-    "Arguments\n"                                           \
-    "    source             the file to use\n"              \
-    "    target             the type of token to extract\n" \
-    "\n"                                                    \
-    "Options\n"                                             \
-    "    --help, -h         display this message\n"
-
-/* Exit codes */
-#define EXIT_HELP_MESSAGE   1
-#define EXIT_UNKNOWN_FILE   2
-#define EXIT_INTERNAL_ERROR 3
-
-/*
- * @docgen: structure
- * @brief: parameters to configure an extractor function
- * @name: ExtractorSetup
- *
- * @param file: the file to read from
- * @type: FILE *
- *
- * @field source: the source file
- * @type: const char *
- *
- * @field target: the type of token to get
- * @type: const char *
-*/
-struct ExtractorSetup {
-    FILE *file;
-    const char *source;
-    const char *target;
-};
+void csource_extract_functions(struct ExtractorSetup setup);
 
 #endif
