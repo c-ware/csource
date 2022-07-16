@@ -38,8 +38,8 @@
 #ifndef CWARE_CSOURCE_EXTRACT_FUNCTIONS_H
 #define CWARE_CSOURCE_EXTRACT_FUNCTIONS_H
 
-struct ExtractorSetup;
+struct ModuleSetup;
 
-void csource_extract_functions(struct ExtractorSetup setup);
+void csource_extract_functions(struct ModuleSetup setup);
 
 #endif

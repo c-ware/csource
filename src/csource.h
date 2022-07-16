@@ -70,8 +70,8 @@
 
 /*
  * @docgen: structure
- * @brief: parameters to configure an extractor function
- * @name: ExtractorSetup
+ * @brief: parameters to configure a module's function
+ * @name: ModuleSetup
  *
  * @param file: the file to read from
  * @type: FILE *
@@ -82,7 +82,7 @@
  * @field target: the type of token to get
  * @type: const char *
 */
-struct ExtractorSetup {
+struct ModuleSetup {
     FILE *file;
     const char *source;
     const char *target;

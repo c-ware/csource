@@ -47,7 +47,7 @@
 #define INCLUSION_FREE(value) cstring_free((value).path)
 
 struct Cstring;
-struct ExtractorSetup;
+struct ModuleSetup;
 
 /*
  * @docgen: structure
@@ -89,7 +89,7 @@ struct CSourceInclusions {
     struct CSourceInclusion *contents;
 };
 
-struct CSourceInclusions *csource_extract_inclusions(struct ExtractorSetup setup);
+struct CSourceInclusions *csource_extract_inclusions(struct ModuleSetup setup);
 
 
 

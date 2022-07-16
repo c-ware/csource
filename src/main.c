@@ -35,15 +35,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-static int x = (1 + (2 + 3));
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 #include "csource.h"
+
 #include "extractors/include/include.h"
 #include "extractors/functions/functions.h"
+
+#include "filters/comments/comments.h"
+
 
 struct ArgparseParser setup_arguments(int argc, char **argv) {
     struct ArgparseParser parser = argparse_init("csource", argc, argv);
@@ -67,8 +69,8 @@ struct ArgparseParser setup_arguments(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) {
+    struct ModuleSetup setup;
     struct ArgparseParser parser = setup_arguments(argc, argv);
-    struct ExtractorSetup setup;
 
     INIT_VARIABLE(setup);
 
@@ -76,12 +78,16 @@ int main(int argc, char **argv) {
     setup.target = argparse_get_argument(parser, "target");
     setup.file = NULL;
 
-
     /* The source file must exist before we go any further. Do not
      * attempt to find a file named '-', since that means stdin. */
-    if(strcmp(setup.source, "-") != 0 && libpath_exists(setup.source) == 0) {
-        fprintf(stderr, "csource: could not find file '%s'\n", setup.source);
-        exit(EXIT_UNKNOWN_FILE);
+    if(strcmp(setup.source, "-") != 0) {
+        if(libpath_exists(setup.source) == 0) {
+            fprintf(stderr, "csource: could not find file '%s'\n", setup.source);
+            exit(EXIT_UNKNOWN_FILE);
+        }
+
+        printf("%s\n", setup.source);
+        printf("%i\n", libpath_exists(setup.source));
     }
 
     if(strcmp(setup.source, "-") == 0)
@@ -103,6 +109,10 @@ int main(int argc, char **argv) {
 
     if(strcmp(setup.target, "functions") == 0) {
         csource_extract_functions(setup);
+    }
+
+    if(strcmp(setup.target, "strip-comments") == 0) {
+        csource_filter_comments(setup);
     }
 
     argparse_free(parser);

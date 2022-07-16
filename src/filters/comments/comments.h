@@ -17,7 +17,7 @@
  * 3. Redistributions of modified source code must append a copyright notice in
  *    the form of 'Copyright <YEAR> <NAME>' to each modified source file's
  *    copyright notice, and the standalone license file if one exists.
- *
+ * 
  * A "redistribution" can be constituted as any version of the source code
  * that is intended to comprise some other derivative work of this code. A
  * fork created for the purpose of contributing to any version of the source
@@ -35,16 +35,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*
- * This file contains functions used for iterating over directories in
- * different forms, this file implements:
- *
- *  - Globbing
- *  - Recursive globbing
- *  - Flat Iteration
- *  - Walking a directory tree
- *
- * All of these functions are built over basic, flat iteration. All other
- * functions can be implemented using it, and such, it is the function which
- * should have platform-dependent implementations.
-*/
+#ifndef CWARE_CSOURCE_FILTER_COMMENTS_H
+#define CWARE_CSOURCE_FILTER_COMMENTS_H
+
+struct ModuleSetup;
+
+void csource_filter_comments(struct ModuleSetup setup);
+
+#endif

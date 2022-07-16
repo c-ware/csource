@@ -158,7 +158,7 @@ static int is_inclusion(struct LibmatchCursor cursor) {
     return 1;
 }
 
-struct CSourceInclusions *csource_extract_inclusions(struct ExtractorSetup setup) {
+struct CSourceInclusions *csource_extract_inclusions(struct ModuleSetup setup) {
     FILE *source_file = setup.file;
     struct LibmatchCursor cursor = libmatch_cursor_from_stream(source_file);
     struct CSourceInclusions *inclusions = carray_init(inclusions, INCLUSION);

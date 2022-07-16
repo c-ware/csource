@@ -47,7 +47,7 @@ static void ignore_string(struct LibmatchCursor *cursor) {
 
 }
 
-void csource_extract_functions(struct ExtractorSetup setup) {
+void csource_extract_functions(struct ModuleSetup setup) {
     int depth = 0;
     FILE *source_file = setup.file;
     struct LibmatchCursor sub_cursor;
@@ -59,7 +59,9 @@ void csource_extract_functions(struct ExtractorSetup setup) {
      * is exhausted. */
     while(cursor.cursor < cursor.length) {
         char *line = NULL;
-        int character = libmatch_cursor_getch(&cursor);
+        int character = -1;
+
+        character = libmatch_cursor_getch(&cursor);
 
         if(character == '"') {
             ignore_string(&cursor);
@@ -84,6 +86,10 @@ void csource_extract_functions(struct ExtractorSetup setup) {
         if(depth != 0)
             continue;
 
+        /* Remove those nasty preprocessor directives */
+        if(character == '#')
+            continue;
+
         /* Read until a '{' or ';', and then go back a character
          * so we can examine whether or not its a declaration or body, so
          * we know whether or not to increase scope */
@@ -93,6 +99,8 @@ void csource_extract_functions(struct ExtractorSetup setup) {
         line = libmatch_read_alloc_until(&cursor, ";{");
         character = libmatch_cursor_getch(&cursor);
         sub_cursor = libmatch_cursor_init(line, strlen(line));
+
+        libmatch_cursor_disable_pushback(&cursor);
 
         /* If the line has an equals sign (this is a possibility, because
          * 'static int x = (1 + (2 + 3));' will still be matched by this
